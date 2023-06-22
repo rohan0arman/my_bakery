@@ -46,10 +46,11 @@ Future<List<Ingredient>> fetchIngredientsData() async {
       )
       .toList();
 }
-Future<Ingredient> fetchSingleIngredientData(String ingredientName) async {
-  final documentSnapshot = await ingredientCollectionRef.doc(ingredientName).get();
-  return Ingredient(documentSnapshot.id, documentSnapshot.data()?['subUnit'], documentSnapshot.data()?['quantity'], documentSnapshot.data()?['rate']);
-}
+
+//Future<Ingredient> fetchSingleIngredientData(String ingredientName) async {
+//  final documentSnapshot = await ingredientCollectionRef.doc(ingredientName).get();
+//  return Ingredient(documentSnapshot.id, documentSnapshot.data()?['subUnit'], documentSnapshot.data()?['quantity'], documentSnapshot.data()?['rate']);
+//}
 
 
 
