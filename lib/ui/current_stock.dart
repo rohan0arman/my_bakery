@@ -288,7 +288,7 @@ class EditStockDialog extends StatelessWidget {
               ingredient.quantity,
               addedQuantity,
               ingredient.rate,
-              totalPrice
+              totalPrice,
             );
 
             Navigator.of(context).pop();
