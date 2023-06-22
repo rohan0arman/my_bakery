@@ -74,7 +74,9 @@ class CurrentStockPage extends StatelessWidget {
                 return const Icon(Icons.error, color: Colors.red);
               } else if (snapshot.hasData) {
                 return StockList(list: snapshot.data!);
-              }
+              } 
+
+              
               return const RepaintBoundary(
                 child: CircularProgressIndicator(),
               );
