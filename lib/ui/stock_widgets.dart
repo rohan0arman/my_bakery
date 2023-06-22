@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_bakery/backend/cloud_storage.dart';
-
 import '../colors.dart';
 
 class IngredientMonitor extends StatefulWidget {
@@ -29,7 +28,7 @@ class IngredientMonitorState extends State<IngredientMonitor> {
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
               '₹',
@@ -48,7 +47,9 @@ class IngredientMonitorState extends State<IngredientMonitor> {
                 size: 30.0,
               )
             : Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     '${ingredient.quantity}',

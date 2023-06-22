@@ -54,14 +54,14 @@ class CurrentStockPage extends StatelessWidget {
           const SizedBox(height: 20.0),
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: Row(
               children: [
                 Text(
-                  'Ingredient in stock',
+                  'Ingredient List',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
-                        fontSize: 18.0,
+                        fontSize: 25.0,
                       ),
                 ),
               ],
@@ -158,7 +158,7 @@ class GoodsTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       trailing: SizedBox(
-        width: 120.0,
+        width: 150.0,
         child: IngredientMonitor(key: ingredientKey, ingredient: ingredient),
       ),
     );
@@ -295,7 +295,10 @@ class EditStockDialog extends StatelessWidget {
 
             //ingredient.quantity = newQuantity;
             //if (!isSameRate) ingredient.rate = newRate;
-            quantityKey.currentState!.updateUi();
+            
+            //ingredient = fetchSingleIngredientData(ingredient['name']);
+            //quantityKey.currentState!.updateUi();
+
           },
           child: Text(
             'Done',
