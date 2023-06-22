@@ -76,7 +76,7 @@ class CurrentStockPage extends StatelessWidget {
                 return StockList(list: snapshot.data!);
               } 
 
-              
+
               return const RepaintBoundary(
                 child: CircularProgressIndicator(),
               );
@@ -206,9 +206,9 @@ class EditStockDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      priceController.text = ingredient.rate.toString();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   priceController.text = ingredient.rate.toString();
+    // });
 
     final textTheme = Theme.of(context).textTheme;
     final inputTextStyle = textTheme.bodyLarge?.copyWith(
@@ -243,7 +243,7 @@ class EditStockDialog extends StatelessWidget {
                 return null;
               },
               controller: quantityController,
-              label: 'Restock Amount',
+              label: 'Quantity',
               inputTextStyle: inputTextStyle,
               suffix: Text(
                 ingredient.subUnit,
@@ -254,14 +254,10 @@ class EditStockDialog extends StatelessWidget {
           const SizedBox(height: 10.0),
           _buildTextField(
             controller: priceController,
-            label: 'Rate',
+            label: 'Total Price',
             inputTextStyle: inputTextStyle,
             prefix: const Text(
               '₹',
-              style: extremeTextStyle,
-            ),
-            suffix: Text(
-              '(per ${ingredient.subUnit})',
               style: extremeTextStyle,
             ),
           ),
@@ -280,24 +276,25 @@ class EditStockDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+
             if (!_formKey.currentState!.validate()) {
               return;
             }
-            final newRate = num.parse(priceController.text);
-            final newQuantity =
-                ingredient.quantity + num.parse(quantityController.text);
+            final totalPrice = num.parse(priceController.text);
+            final addedQuantity = num.parse(quantityController.text);
 
-            final isSameRate = ingredient.rate == newRate;
-            updateIngredients(
+            updateIngredientDetails(
               ingredient.name,
-              newQuantity,
-              isSameRate ? null : newRate,
+              ingredient.quantity,
+              addedQuantity,
+              ingredient.rate,
+              totalPrice
             );
 
             Navigator.of(context).pop();
 
-            ingredient.quantity = newQuantity;
-            if (!isSameRate) ingredient.rate = newRate;
+            //ingredient.quantity = newQuantity;
+            //if (!isSameRate) ingredient.rate = newRate;
             quantityKey.currentState!.updateUi();
           },
           child: Text(

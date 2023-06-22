@@ -14,6 +14,28 @@ class Ingredient {
   num rate;
 }
 
+Future<dynamic> addPurchaseRecord(
+  String rawMaterialName,
+  num previousQuantity,
+  num addedQuantity,
+  num rate,
+) async {
+  try {
+    CollectionReference collectionRef = db.collection('purchase-history');
+    var docRef = await collectionRef.add({
+      "date": DateTime.now(),
+      "name": rawMaterialName,
+      "previousQuantity": previousQuantity,
+      "addedQuantity": addedQuantity,
+      "pricePerUnit": rate,
+    });
+    print('New record added with ID: ${docRef.id}');
+    return docRef.id;
+  } catch (error) {
+    print('Error adding record: $error');
+  }
+}
+
 Future<List<Ingredient>> fetchIngredientsData() async {
   final querySnapshot = await ingredientCollectionRef.get();
 
@@ -25,12 +47,20 @@ Future<List<Ingredient>> fetchIngredientsData() async {
       .toList();
 }
 
-Future<dynamic> updateIngredients(
-    String goodsName, num newQuantity, num? price) async {
-  return await db
-      .collection('stock')
-      .doc(goodsName)
-      .update({'quantity': newQuantity, if (price != null) 'price': price});
+Future<void> updateIngredientDetails(
+    String ingredientName,num previousQuantity, num addedQuantity, num previousRate, num? totalPrice) async {
+    num newRate = double.parse((totalPrice! / addedQuantity).toStringAsFixed(2));
+    num avarageRate = double.parse(
+      (((previousRate * previousQuantity) + totalPrice) /
+              (previousQuantity + addedQuantity))
+          .toStringAsFixed(2),
+    );
+    await db
+      .collection('raw-materials')
+      .doc(ingredientName)
+      .update({'quantity': FieldValue.increment(addedQuantity), 'pricePerUnit': avarageRate});
+
+    await addPurchaseRecord(ingredientName,previousQuantity,addedQuantity,newRate);
 }
 
 class PurchaseHistory {
