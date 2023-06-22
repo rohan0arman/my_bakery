@@ -48,27 +48,31 @@ Future<List<Ingredient>> fetchIngredientsData() async {
 }
 
 Future<Ingredient> fetchAIngredientData(String ingredientName) async {
-  final documentSnapshot = await ingredientCollectionRef.doc(ingredientName).get();
-  return Ingredient(documentSnapshot.id, documentSnapshot.data()?['subUnit'], documentSnapshot.data()?['quantity'], documentSnapshot.data()?['rate']);
+  final documentSnapshot =
+      await ingredientCollectionRef.doc(ingredientName).get();
+  return Ingredient(documentSnapshot.id, documentSnapshot.data()?['subUnit'],
+      documentSnapshot.data()?['quantity'], documentSnapshot.data()?['rate']);
 }
 
-
-
-
 Future<void> updateIngredientDetails(
-    String ingredientName,num previousQuantity, num addedQuantity, num previousRate, num? totalPrice) async {
-    num newRate = double.parse((totalPrice! / addedQuantity).toStringAsFixed(2));
-    num avarageRate = double.parse(
-      (((previousRate * previousQuantity) + totalPrice) /
-              (previousQuantity + addedQuantity))
-          .toStringAsFixed(2),
-    );
-    await db
-      .collection('raw-materials')
-      .doc(ingredientName)
-      .update({'quantity': FieldValue.increment(addedQuantity), 'pricePerUnit': avarageRate});
+    String ingredientName,
+    num previousQuantity,
+    num addedQuantity,
+    num previousRate,
+    num totalPrice) async {
+  num newRate = double.parse((totalPrice / addedQuantity).toStringAsFixed(2));
+  num avarageRate = double.parse(
+    (((previousRate * previousQuantity) + totalPrice) /
+            (previousQuantity + addedQuantity))
+        .toStringAsFixed(2),
+  );
+  await db.collection('raw-materials').doc(ingredientName).update({
+    'quantity': FieldValue.increment(addedQuantity),
+    'pricePerUnit': avarageRate
+  });
 
-    await addPurchaseRecord(ingredientName,previousQuantity,addedQuantity,newRate);
+  await addPurchaseRecord(
+      ingredientName, previousQuantity, addedQuantity, newRate);
 }
 
 class PurchaseHistory {
@@ -91,13 +95,27 @@ class PurchaseHistory {
   factory PurchaseHistory.fromMap(Map<String, dynamic> map) {
     return PurchaseHistory(
       map['name'],
-      DateFormat('d MMMM, yyyy').format(map['date'] as DateTime),
+      DateFormat('dd/MM/yyyy').format(map['date'].toDate()),
       map['previousQuantity'],
       map['addedQuantity'],
       map['pricePerUnit'],
       map['addedQuantity'] * map['pricePerUnit'],
     );
   }
+}
+
+Future<List<PurchaseHistory>> fetchLastNthPurchaseRecords(int count) async {
+  QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
+      .collection('purchase-history')
+      .orderBy('date', descending: true)
+      .limit(count)
+      .get();
+
+  return querySnapshot.docs
+      .map(
+        (document) => PurchaseHistory.fromMap(document.data()),
+      )
+      .toList();
 }
 
 Future<List<PurchaseHistory>> fetchPurchaseRecords(

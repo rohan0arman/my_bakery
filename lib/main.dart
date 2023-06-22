@@ -63,7 +63,10 @@ class _UiPageHolderState extends State<UiPageHolder> {
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Ingredient'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list), 
+            label: 'Ingredient'
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag_outlined),
             label: 'Products',
