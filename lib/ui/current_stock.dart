@@ -297,7 +297,8 @@ class EditStockDialog extends StatelessWidget {
             //if (!isSameRate) ingredient.rate = newRate;
             
             //ingredient = fetchSingleIngredientData(ingredient['name']);
-            //quantityKey.currentState!.updateUi();
+            quantityKey.currentState!.updateUi();
+            
 
           },
           child: Text(
